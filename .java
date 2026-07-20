@@ -1,34 +1,35 @@
-import java.util.Stack;
-
 public class Solution {
-    public int longestValidParentheses(String s) {
-        Stack<Integer> stack = new Stack<>();
-        stack.push(-1); 
 
-        int maxLength = 0;
+    public int longestValidParentheses(String s) {
+        int max = 0;
 
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                stack.push(i);
-            } else {
-                stack.pop();
 
-                if (stack.isEmpty()) {
-                    stack.push(i);
-                } else {
-                    maxLength = Math.max(maxLength, i - stack.peek());
+            for (int j = i + 2; j <= s.length(); j += 2) {
+
+                if (isValid(s.substring(i, j))) {
+                    max = Math.max(max, j - i);
                 }
             }
         }
 
-        return maxLength;
+        return max;
     }
 
-    public static void main(String[] args) {
-        Solution sol = new Solution();
+    private boolean isValid(String str) {
+        int count = 0;
 
-        System.out.println(sol.longestValidParentheses("(()"));     
-        System.out.println(sol.longestValidParentheses(")()())"));  
-        System.out.println(sol.longestValidParentheses(""));        
+        for (char ch : str.toCharArray()) {
+
+            if (ch == '(')
+                count++;
+            else
+                count--;
+
+            if (count < 0)
+                return false;
+        }
+
+        return count == 0;
     }
 }
